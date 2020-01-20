@@ -1,0 +1,9 @@
+{
+  "name": "dev-radar-backend",
+  "version": "1.0.0",
+  "description": "Backend for our super cool radar.",
+  "main": "index.js",
+  "repository": "https://github.com/lucianodecezare/devRadar",
+  "author": "Luciano de Cezare",
+  "license": "MIT"
+}
