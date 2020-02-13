@@ -1,16 +1,21 @@
 const axios = require('axios');
 
 const Dev = require('../models/Dev');
+const parseStringAsArray = require('../utils/parseStringAsArray');
 
 module.exports = {
+  // TODO: Document this
   async index(request, response) {
+    // TODO: Document a query example
     const devs = await Dev.find();
 
     return response.status(200).json(devs);
   },
+  // TODO: Document this
   async store(request, response) {
     const { github, techs, latitude, longitude } = request.body;
 
+    // TODO: Document a query example
     let dev = await Dev.findOne({ github });
 
     if (!dev) {
@@ -19,7 +24,7 @@ module.exports = {
 
       const { name = login, avatar_url, bio } = data;
 
-      const techsArray = techs.split(',').map((tech) => tech.trim());
+      const techsArray = parseStringAsArray(techs);
 
       const location = {
         type: 'Point',
