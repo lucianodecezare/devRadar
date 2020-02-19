@@ -8,6 +8,7 @@ const DevSchema = new mongoose.Schema({
   bio: String,
   avatar_url: String,
   techs: [String],
+  // This is how mongodb deal with geolocation
   location: {
     type: PointSchema,
     index: '2dsphere'

@@ -2,13 +2,19 @@ const Dev = require('../models/Dev');
 const parseStringAsArray = require('../utils/parseStringAsArray');
 
 module.exports = {
-  // TODO: Document this
+  /**
+   * Search for all `Devs` that match the params.
+   *
+   * @param {Object} request
+   * @param {Object} response
+   *
+   * @returns {Object} All the devs
+   */
   async index(request, response) {
     const { latitude, longitude, techs } = request.query;
 
     const techsArray = parseStringAsArray(techs);
 
-    // TODO: Document a query example
     const devs = await Dev.find({
       techs: {
         $in: techsArray
