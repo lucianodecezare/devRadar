@@ -2,165 +2,56 @@ import React, { useEffect, useState } from 'react';
 
 import { api } from './services/api';
 
+import { DevItem } from './components/DevItem';
+import { DevForm } from './components/DevForm';
+
 import './global.css';
 import './App.css';
 import './Main.css';
 import './Sidebar.css';
 
 function App() {
-  const [latitude, setLatitude] = useState('');
-  const [longitude, setLongitude] = useState('');
-  const [github, setGithub] = useState('');
-  const [techs, setTechs] = useState('');
+  const [devs, setDevs] = useState([]);
 
+  // Get Devs
   useEffect(() => {
-    navigator.geolocation.getCurrentPosition(
-      (position) => {
-        const { latitude, longitude } = position.coords;
+    const loadDevs = async () => {
+      const { data } = await api.get('/devs');
 
-        setLatitude(latitude);
-        setLongitude(longitude);
-      },
-      (error) => {
-        console.log(error);
-      },
-      { timeout: 30000 }
-    );
+      setDevs(data);
+    };
+
+    loadDevs();
   }, []);
 
-  const handleAddDev = async (event) => {
-    event.preventDefault();
+  // Create Dev
+  const handleAddDev = async (dev) => {
+    try {
+      const { data } = await api.post('/devs', dev).catch((error) => {
+        throw new Error(error);
+      });
 
-    // const response =
-    await api.post('/devs', { github, techs, latitude, longitude });
-
-    setGithub('');
-    setTechs('');
+      setDevs([...devs, data]);
+    } catch (error) {
+      // TODO: Change alert for a proper notification
+      alert(error.message);
+    }
   };
 
   return (
     <div id="app">
+      {/* Left Menu */}
       <aside>
         <strong>Cadastrar</strong>
-        <form>
-          {/* Github */}
-          <div className="input-block">
-            <label htmlFor="github">Usuário do Github</label>
-            <input
-              name="github"
-              id="github"
-              required
-              value={github}
-              onChange={(event) => setGithub(event.target.value)}
-            />
-          </div>
-          {/* Techs */}
-          <div className="input-block">
-            <label htmlFor="techs">Tecnologias</label>
-            <input
-              name="techs"
-              id="techs"
-              required
-              value={techs}
-              onChange={(event) => setTechs(event.target.value)}
-            />
-          </div>
-          {/* Geolocation */}
-          <div className="input-group">
-            {/* Latitude */}
-            <div className="input-block">
-              <label htmlFor="latitude">Latitude</label>
-              <input
-                name="latitude"
-                id="latitude"
-                type="number"
-                required
-                value={latitude}
-                onChange={(event) => setLatitude(event.target.value)}
-              />
-            </div>
-            {/* Longitude */}
-            <div className="input-block">
-              <label htmlFor="longitude">Longitude</label>
-              <input
-                name="longitude"
-                id="longitude"
-                type="number"
-                required
-                value={longitude}
-                onChange={(event) => setLongitude(event.target.value)}
-              />
-            </div>
-          </div>
-          {/* Submit */}
-          <button onClick={handleAddDev}>Salvar</button>
-        </form>
+        <DevForm onSubmit={handleAddDev} />
       </aside>
 
+      {/* Main List */}
       <main>
         <ul>
-          <li className="dev-item">
-            <header>
-              <img
-                src="https://avatars2.githubusercontent.com/u/12416871?s=460&v=4"
-                alt="Dev avatar"
-              />
-              <div className="user-info">
-                <strong>Luciano de Cezare</strong>
-                <span>ReactJS, React Native, Node.js</span>
-              </div>
-            </header>
-            <p>
-              Muleque bonito Muleque bonito Muleque bonito Muleque bonito Muleque bonito Muleque
-              bonito Muleque bonito Muleque bonito Muleque bonito Muleque bonito{' '}
-            </p>
-            <a href="https://github.com/lucianodecezare">Acessar perfil no Github</a>
-          </li>
-
-          <li className="dev-item">
-            <header>
-              <img
-                src="https://avatars2.githubusercontent.com/u/12416871?s=460&v=4"
-                alt="Dev avatar"
-              />
-              <div className="user-info">
-                <strong>Luciano de Cezare</strong>
-                <span>ReactJS, React Native, Node.js</span>
-              </div>
-            </header>
-            <p>Muleque bonito</p>
-            <a href="https://github.com/lucianodecezare">Acessar perfil no Github</a>
-          </li>
-
-          <li className="dev-item">
-            <header>
-              <img
-                src="https://avatars2.githubusercontent.com/u/12416871?s=460&v=4"
-                alt="Dev avatar"
-              />
-              <div className="user-info">
-                <strong>Luciano de Cezare</strong>
-                <span>ReactJS, React Native, Node.js</span>
-              </div>
-            </header>
-            <p>Muleque bonito</p>
-            <a href="https://github.com/lucianodecezare">Acessar perfil no Github</a>
-          </li>
-
-          <li className="dev-item">
-            <header>
-              <img
-                src="https://avatars2.githubusercontent.com/u/12416871?s=460&v=4"
-                alt="Dev avatar"
-              />
-              <div className="user-info">
-                <strong>Luciano de Cezare</strong>
-                <span>ReactJS, React Native, Node.js</span>
-              </div>
-            </header>
-            <p>Muleque bonito</p>
-            <a href="https://github.com/lucianodecezare">Acessar perfil no Github</a>
-          </li>
+          {devs.map((dev) => (
+            <DevItem key={dev._id} dev={dev} />
+          ))}
         </ul>
       </main>
     </div>
