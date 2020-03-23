@@ -1,12 +1,13 @@
 import React, { useEffect, useState } from 'react';
 
-import { StyleSheet } from 'react-native';
+import { Image, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
 
-import MapView from 'react-native-maps';
+import MapView, { Callout, Marker } from 'react-native-maps';
 
 import { requestPermissionsAsync, getCurrentPositionAsync } from 'expo-location';
+import { MaterialIcons } from '@expo/vector-icons';
 
-function Main() {
+function Main({ navigation }) {
   const [currentRegion, setCurrentRegion] = useState(null);
 
   useEffect(() => {
@@ -34,12 +35,104 @@ function Main() {
     return null;
   }
 
-  return <MapView initialRegion={currentRegion} style={styles.map} />;
+  return (
+    <>
+      <MapView initialRegion={currentRegion} style={styles.map}>
+        <Marker coordinate={{ latitude: -21.1203996, longitude: -48.9706811 }}>
+          <Image
+            style={styles.avatar}
+            source={{
+              uri:
+                'https://avatars0.githubusercontent.com/u/12416871?s=400&u=4d2672e1aac1f13726cf477c9b1af1a386f1e911&v=4'
+            }}
+          />
+          <Callout
+            onPress={() => {
+              navigation.navigate('Profile', { github: 'lucianodecezare' });
+            }}
+          >
+            <View style={styles.callout}>
+              <Text style={styles.devName}>Luciano de Cezare</Text>
+              <Text style={styles.devBio}>Maluco loco</Text>
+              <Text style={styles.devTechs}>React, Node</Text>
+            </View>
+          </Callout>
+        </Marker>
+      </MapView>
+
+      <View style={styles.searchForm}>
+        <TextInput
+          style={styles.searchInput}
+          autoCapitalize="words"
+          autoCorrect={false}
+          placeholder="Buscar devs por techs..."
+          placeholderTextColor="#999"
+        />
+        <TouchableOpacity onPress={() => {}} style={styles.loadButton}>
+          <MaterialIcons color="#FFF" name="my-location" size={20} />
+        </TouchableOpacity>
+      </View>
+    </>
+  );
 }
 
 const styles = StyleSheet.create({
   map: {
     flex: 1
+  },
+  avatar: {
+    width: 54,
+    height: 54,
+    borderRadius: 4,
+    borderWidth: 4,
+    borderColor: '#FFF'
+  },
+  callout: {
+    width: 260
+  },
+  devName: {
+    fontWeight: 'bold',
+    fontSize: 16
+  },
+  devBio: {
+    color: '#666',
+    marginTop: 5
+  },
+  devTechs: {
+    marginTop: 5
+  },
+  searchForm: {
+    position: 'absolute',
+    top: 20,
+    left: 20,
+    right: 20,
+    zIndex: 5,
+    flexDirection: 'row'
+  },
+  searchInput: {
+    flex: 1,
+    height: 50,
+    backgroundColor: '#FFF',
+    color: '#333',
+    borderRadius: 25,
+    paddingHorizontal: 20,
+    fontSize: 16,
+    shadowColor: '#000',
+    shadowOpacity: 0.2,
+    shadowOffset: {
+      width: 4,
+      height: 4
+    },
+    elevation: 3
+  },
+  loadButton: {
+    width: 50,
+    height: 50,
+    backgroundColor: '#8E4DFF',
+    borderRadius: 25,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginLeft: 15
   }
 });
 
