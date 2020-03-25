@@ -2,6 +2,7 @@ const axios = require('axios');
 
 const Dev = require('../models/Dev');
 const parseStringAsArray = require('../utils/parseStringAsArray');
+const { findConnections, sendMessage } = require('../socket');
 
 module.exports = {
   /**
@@ -53,6 +54,10 @@ module.exports = {
         }).catch((error) => {
           throw new Error(error);
         });
+
+        const sendSocketMessageTo = findConnections({ latitude, longitude }, techsArray);
+
+        sendMessage(sendSocketMessageTo, 'new-dev', dev);
       }
 
       return response.status(200).json(dev);
