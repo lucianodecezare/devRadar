@@ -1,7 +1,9 @@
 /**
  * Parse a string as an array.
  *
- * Example: 'React, Node, React-Native' becomes ['React', 'Node', 'React-Native']
+ * @param {String} arrayAsString String like 'React, Node, React-Native'
+ *
+ * @returns ['React', 'Node', 'React-Native']
  */
 const parseStringAsArray = (arrayAsString) => {
   return arrayAsString.split(',').map((string) => string.trim());

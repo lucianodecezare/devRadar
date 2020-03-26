@@ -15,7 +15,11 @@ function Main({ navigation }) {
   const [devs, setDevs] = useState([]);
   const [techs, setTechs] = useState('');
 
+  // Component start
   useEffect(() => {
+    /**
+     * Load the map with actual device location
+     */
     async function loadInitialPosition() {
       const { granted } = await requestPermissionsAsync();
 
@@ -36,10 +40,14 @@ function Main({ navigation }) {
     loadInitialPosition();
   }, []);
 
+  // Whenever devs changes
   useEffect(() => {
     subscribeToNewDevs((dev) => setDevs([...devs, dev]));
   }, [devs]);
 
+  /**
+   * Connect to socket server
+   */
   function setupWebSocket() {
     disconnect();
 
@@ -48,6 +56,9 @@ function Main({ navigation }) {
     connect(latitude, longitude, techs);
   }
 
+  /**
+   * Search for devs
+   */
   async function loadDevs() {
     const { latitude, longitude } = currentRegion;
 
@@ -65,6 +76,9 @@ function Main({ navigation }) {
     setupWebSocket();
   }
 
+  /**
+   * Change the map coordinates
+   */
   function handleRegionChanged(region) {
     setCurrentRegion(region);
   }

@@ -1,7 +1,22 @@
+/**
+ * Convert degree to radius.
+ *
+ * @param {Number} deg Degree to be converted
+ *
+ * @returns Radius of that degree
+ */
 function deg2rad(deg) {
   return deg * (Math.PI / 180);
 }
 
+/**
+ * Get the distance between 2 coordinates in kilometers.
+ *
+ * @param {Object} centerCoordinates Actual distance
+ * @param {Object} pointCoordinates Destination
+ *
+ * @returns Distance between the actual distance and destination
+ */
 module.exports = function getDistanceFromLatLonInKm(centerCoordinates, pointCoordinates) {
   const radius = 6371;
 
